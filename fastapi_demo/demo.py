@@ -2,9 +2,10 @@
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional, List
 from datetime import datetime
+from loguru import logger
 import dotenv
 
-
+logger.add("demo.log")
 """
 # 在.env中加载对应环境变量， 示例如下
 AIFLOW_DOMAIN="私有化部署的aiflow接口域名，如果使用Saas那么不需要配置此项"
@@ -94,6 +95,7 @@ def search_users(query: UserSearchQuery) -> StandardResponse:
     """搜索用户 - 使用BaseModel定义所有查询参数"""
     # query参数已自动验证和转换类型
     results = f"Hello World: {query.model_dump()}"
+    logger.info(f"search_users resp: {results}")
     return StandardResponse(success=True, data=results)
 
 
@@ -110,6 +112,7 @@ def create_user(user_data: UserCreateModel) -> StdRespUser:
         "profile": user_data.profile.model_dump(),
         "id": 12345,
     }
+    logger.info(f"create user: {user}")
     return StdRespUser(success=True, data=user)
 
 
