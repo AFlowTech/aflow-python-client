@@ -1,0 +1,26 @@
+# 打包
+*.egg-info/
+build/
+dist/
+*.whl
+*.tar.gz
+
+# 虚拟环境
+venv/
+env/
+.venv/
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 缓存
+__pycache__/
+*.pyc
+
+
+encrypt_lib/
+

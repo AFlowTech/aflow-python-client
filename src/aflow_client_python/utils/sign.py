@@ -1,0 +1,82 @@
+import ctypes
+import json
+import time
+import os
+import platform
+
+
+class ASignature:
+    def __init__(self,):
+
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # 根据操作系统选择库文件
+        system = platform.system().lower()
+        if system == "windows":
+            lib_filename = "libencrypt.dll"
+        else:  # Linux and other Unix-like systems
+            lib_filename = "libencrypt.so"
+
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        lib_path = os.path.join(base_dir, lib_filename)
+
+        # 检查库文件是否存在
+        if not os.path.exists(lib_path):
+            raise FileNotFoundError(f"加密库文件不存在: {lib_path}")
+
+        try:
+            self.lib = ctypes.CDLL(lib_path)
+        except OSError as e:
+            raise OSError(f"加载加密库失败: {e}")
+
+        # 定义函数签名
+        self.lib.generate_signature.argtypes = [
+            ctypes.c_char_p,  # app_id
+            ctypes.c_char_p,  # enterprise_code
+            ctypes.c_char_p,  # app_secret
+            ctypes.c_char_p,  # request_body
+            ctypes.c_longlong  # timestamp
+        ]
+        self.lib.generate_signature.restype = ctypes.c_char_p
+
+        self.lib.free_string.argtypes = [ctypes.c_char_p]
+        self.lib.free_string.restype = None
+
+    def generate_signature(self, credential: dict, request_body: str) -> str:
+        """生成十六进制格式的签名"""
+        app_id = credential.get("app_id", "")
+        enterprise_code = credential.get("enterprise_code", "")
+        app_secret = credential.get("app_secret", "")
+
+        timestamp = int(time.time() * 1000) # TODO: 恢复
+
+        # 调用C函数
+        result = self.lib.generate_signature(
+            app_id.encode('utf-8'),
+            enterprise_code.encode('utf-8'),
+            app_secret.encode('utf-8'),
+            request_body.encode('utf-8'),
+            timestamp
+        )
+
+        # 复制结果并释放C端内存
+        signature_hex = result.decode('utf-8')
+        # self.lib.free_string(result)
+
+        return signature_hex
+
+
+# 使用示例
+if __name__ == "__main__":
+    signature_gen = ASignature()
+
+    credential = {
+        "app_id": "your_app_id",
+        "enterprise_code": "your_enterprise_code",
+        "app_secret": "your_app_secret",
+    }
+
+    request_body = json.dumps({"key": "value"}, separators=(',', ':'), ensure_ascii=False)  # 示例请求体
+
+    hex_signature = signature_gen.generate_signature(credential, request_body)
+    print(f"Hex Signature: {hex_signature}")
