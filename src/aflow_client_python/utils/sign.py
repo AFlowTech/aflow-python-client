@@ -7,15 +7,15 @@ import platform
 
 class ASignature:
     def __init__(self,):
-
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-
         # 根据操作系统选择库文件
         system = platform.system().lower()
-        if system == "windows":
-            lib_filename = "libencrypt.dll"
-        else:  # Linux and other Unix-like systems
+
+        if system == "linux":
             lib_filename = "libencrypt.so"
+        elif system == "darwin":  # macOS
+            lib_filename = "libencrypt.dylib"
+        else:
+            lib_filename = "libencrypt.dll"
 
         base_dir = os.path.dirname(os.path.abspath(__file__))
         lib_path = os.path.join(base_dir, lib_filename)

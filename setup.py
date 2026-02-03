@@ -23,10 +23,12 @@ setup(
     url="https://github.com/AFlowTech/aflow-python-client.git",
     package_dir={'': 'src'},
     packages=find_packages(where='src', exclude=["tests*", "examples*", "encrypt_lib*", "fastapi_demo*"]),
+    package_data={
+        '': ['utils/*.so', 'utils/*.dll', 'utils/*.dylib'],  # 包含 utils 目录下的 dll 文件
+    },
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
@@ -35,6 +37,7 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
     ],
+    license="MIT",
     python_requires=">=3.7",
     install_requires=install_requires,
     include_package_data=True,
