@@ -5,7 +5,7 @@ import os
 from typing import Optional
 
 # Default logger configuration
-DEFAULT_LOG_LEVEL = logging.DEBUG #TODO: Change to INFO
+DEFAULT_LOG_LEVEL = logging.INFO #TODO: Change to INFO
 DEFAULT_LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
 # Create logger cache

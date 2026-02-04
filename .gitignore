@@ -4,6 +4,7 @@ build/
 dist/
 *.whl
 *.tar.gz
+*.log
 
 # 虚拟环境
 venv/
