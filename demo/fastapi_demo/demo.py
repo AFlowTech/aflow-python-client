@@ -1,5 +1,5 @@
 # app/routers/user_controller.py
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 from typing import Optional, List
 from datetime import datetime
 from loguru import logger
@@ -60,7 +60,7 @@ class UserCreateModel(BaseModel):
     # profile: Optional["UserProfile"] = None
     profile: Optional[UserProfile]
 
-    class Config:
+    model_config = ConfigDict(
         json_schema_extra = {
             "example": {
                 "username": "john_doe",
@@ -68,6 +68,7 @@ class UserCreateModel(BaseModel):
                 "profile": {"age": 30, "bio": "Software developer"},
             }
         }
+    )
 
 # 自定义标准返回接口示例，用户可以自行修改
 class StandardResponse(BaseModel):
@@ -77,7 +78,7 @@ class StandardResponse(BaseModel):
 
 # 如果data为自定义模型，则需要通过继承StandardResponse
 class StdRespUser(StandardResponse):
-    data: Optional[UserProfile]
+    data: Optional[UserCreateModel]
 
 
 # 注册嵌套模型（解决前向引用）
