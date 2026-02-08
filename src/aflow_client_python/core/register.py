@@ -28,6 +28,7 @@ except ImportError:
 
 logger = get_logger()
 
+
 class FieldAdapter:
 
     @staticmethod
@@ -172,12 +173,15 @@ class EnhancedServiceRegistrar:
         except Exception:
             return "127.0.0.1"
 
-    def _convert_to_schema(self, param_schema_list: list) -> list:
+    def _convert_to_schema(self, param_schema_list: list) -> dict:
         """将python接口获取的信息转为标准格式"""
         converted_list = []
         for param in param_schema_list:
             converted_list.append(FieldAdapter.adapter(param))
-        return converted_list
+        return {
+            "type": "record",
+            "required": False,
+            "childrenFields": converted_list}
 
     def register(self, interfaces: List[Dict[str, Any]]):
         final_payload = []
@@ -186,19 +190,19 @@ class EnhancedServiceRegistrar:
             "appCnName": self.app_cn_name,
             "ip": self.ip,
             "hostName": self.host_name,
-            "aserviceType": AServiceType.HTTP.value, # 注意，这里key需要使用aserviceType来映射到AServiceType
+            "domain": self.service_domain,  # 注册服务使用的域名
+            "aserviceType": AServiceType.HTTP.value,  # 注意，这里key需要使用aserviceType来映射到AServiceType
         }
         """向注册中心注册服务实例及增强的接口信息"""
         # 提取所有接口的模型信息
         for context in interfaces:
-
             payload = {
                 "name": context.get("name"),  # 服务名
                 "serviceName": context.get("path"),  # url path地址
                 "description": context.get("desc", ""),
                 "methodType": context.get("http_method", "").upper(),  # 全部转大写
                 "reqParamSchema": json.dumps(self._convert_to_schema(context.get("parameters", [])),
-                                             separators=(',', ':'), # 紧凑型
+                                             separators=(',', ':'),  # 紧凑型
                                              ensure_ascii=False),
                 "respParamSchema": json.dumps(self._convert_to_schema(context.get("return_info", {}).get("fields", [])),
                                               separators=(',', ':'),  # 紧凑型
