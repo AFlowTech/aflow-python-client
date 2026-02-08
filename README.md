@@ -48,5 +48,5 @@ pip install -e .
 # 编译wheel包
 
 ```bash
- python setup.py sdist bdist_wheel
+python setup.py sdist bdist_wheel
 ```
