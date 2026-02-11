@@ -9,7 +9,6 @@ class ASignature:
     def __init__(self,):
         # 根据操作系统选择库文件
         system = platform.system().lower()
-        print(system)
 
         if system == "linux":
             lib_filename = "libencrypt.so"
