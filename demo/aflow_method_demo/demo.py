@@ -236,7 +236,8 @@ def sync_task():
 
 
 if __name__ == '__main__':
-    # print(os.getenv("APP_ID"))
+    if not os.getenv("APP_ID", ""):
+        raise Exception("未能从系统变量中加载必要参数，请检查后再试")
     # print(sync_department())
     # print(sync_user())
     # print(bind_user())
