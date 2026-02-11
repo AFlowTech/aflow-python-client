@@ -7,7 +7,6 @@ import json
 from datetime import datetime
 
 load_dotenv(".env")
-load_dotenv("../.env")
 
 sig_generator = ASignature()
 base_url = os.getenv("AIFLOW_DOMAIN", "")
