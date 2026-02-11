@@ -1,6 +1,6 @@
-[![Version](https://img.shields.io/github/v/release/AFlowTech/aflow-python-client)](https://github.com/AFlowTech/aflow-python-client/tags)
-[![Release Date](https://img.shields.io/github/release-date/AFlowTech/aflow-python-client)](https://github.com/AFlowTech/aflow-python-client/tags)
-[![Downloads](https://img.shields.io/github/downloads/AFlowTech/aflow-python-client/total)](https://github.com/AFlowTech/aflow-python-client/tags)
+[![Version](https://img.shields.io/github/v/release/AFlowTech/aflow-python-client)](https://github.com/AFlowTech/aflow-python-client/releases)
+[![Release Date](https://img.shields.io/github/release-date/AFlowTech/aflow-python-client)](https://github.com/AFlowTech/aflow-python-client/releases)
+[![Downloads](https://img.shields.io/github/downloads/AFlowTech/aflow-python-client/total)](https://github.com/AFlowTech/aflow-python-client/releases)
 
 # 整体架构
 https://github.com/AFlowTech/aflow-python-client
