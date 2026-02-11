@@ -19,6 +19,14 @@ SERVICE_DOMAIN="http服务对应的域名地址，需要确保私有化部署或
 pip install -r requirements.txt
 ```
 
-# 启动
+# demo用法
+
+## fastapi_demo 启动
 
 在demo目录执行 ```python -m fastapi_demo.demo```
+启动后，会自动将添加注解的http服务注册到aflow中，在流程中进行选择调用
+
+## aflow_method_demo 使用
+
+在demo目录执行 ```python -m aflow_method_demo.demo```
+提供了如何调用aflow内置的方法，完成流程相关操作的示例。
