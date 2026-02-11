@@ -86,27 +86,25 @@ def sync_user():
 
 def bind_user():
     url = f"{base_url}/aflow/api/auth/bind"
-    request_data = {
+    payload = {
         "customUserCode": "11000011111",  # 贵公司Odoo系统的用户ID
+        "phoneNumber": "18888888888",  # 和飞书用户ID二选一
         # "linkUserCode": "feishu_user_12345"  # 飞书用户ID（如果已集成飞书）
     }
 
-    request_body = json.dumps(request_data)
-    signature = sig_generator.create_signature(request_body)
+    print(json.dumps(payload, ensure_ascii=False))
 
     headers = {
         "Content-Type": "application/json",
-        "A-Signature": signature
+        "X-A-Signature": sig_generator.create_signature(json.dumps(payload))
     }
-
     response = requests.post(
         url,
         headers=headers,
-        json=request_data
+        json=payload
     )
 
-    result = response.json()
-    print(result)
+    return response.text
 
 
 def create_third_party():
@@ -188,6 +186,7 @@ def sync_task():
 
     payload = {
         "thirdOrderId": 123456,
+        "thirdFlowCode": "SALES_ORDER",
         "orderStatus": "ing",
         "orderResult": "ing",
         "initiator": "11000011111",  # 贵公司Odoo系统的用户ID
@@ -214,6 +213,49 @@ def sync_task():
                 "showMobile": True
             }
         ]
+    }
+
+    print(json.dumps(payload, ensure_ascii=False))
+    headers = {
+        "Content-Type": "application/json",
+        # 注意，这里对payload dump的时候，不要使用 ensure_ascii=False！
+        # 如果appId等变量已经注入到系统变量中，则可以只提供请求体
+        "X-A-Signature": sig_generator.create_signature(json.dumps(payload)),
+    }
+
+    try:
+        print(url)
+        ret = requests.post(url, json=payload, headers=headers)
+        if ret.status_code == 200:
+            return ret.json()
+        else:
+            print(ret.text)
+    except Exception as e:
+        print(e)
+
+
+def handle_flow():
+    url = f"{base_url}/aflow/api/order/open/handle_flow"
+
+    # 构造请求参数
+    handle_param = {
+        "orderId": 123456789,  # 流程订单编码
+        "taskOrderId": "TASK_001",  # 任务ID
+        "operateType": "pass",  # 操作类型，参考 AFlowOperatorType 枚举
+        "customUserCode": "USER_001",  # 操作人编码
+        "remark": "处理备注信息"  # 处理备注
+    }
+
+    form_data = {
+        "values": [
+            {"fieldId": "field1", "value": "value1"},
+            {"fieldId": "field2", "value": "value2"}
+        ]
+    }
+
+    payload = {
+        "handleParam": handle_param,
+        "formData": form_data
     }
 
     print(json.dumps(payload, ensure_ascii=False))
