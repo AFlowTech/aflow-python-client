@@ -233,48 +233,6 @@ def sync_task():
         print(e)
 
 
-def handle_flow():
-    url = f"{base_url}/aflow/api/order/open/handle_flow"
-
-    # 构造请求参数
-    handle_param = {
-        "orderId": 123456789,  # 流程订单编码
-        "taskOrderId": "TASK_001",  # 任务ID
-        "operateType": "pass",  # 操作类型，参考 AFlowOperatorType 枚举
-        "customUserCode": "USER_001",  # 操作人编码
-        "remark": "处理备注信息"  # 处理备注
-    }
-
-    form_data = {
-        "values": [
-            {"fieldId": "field1", "value": "value1"},
-            {"fieldId": "field2", "value": "value2"}
-        ]
-    }
-
-    payload = {
-        "handleParam": handle_param,
-        "formData": form_data
-    }
-
-    print(json.dumps(payload, ensure_ascii=False))
-    headers = {
-        "Content-Type": "application/json",
-        # 注意，这里对payload dump的时候，不要使用 ensure_ascii=False！
-        # 如果appId等变量已经注入到系统变量中，则可以只提供请求体
-        "X-A-Signature": sig_generator.create_signature(json.dumps(payload)),
-    }
-
-    try:
-        print(url)
-        ret = requests.post(url, json=payload, headers=headers)
-        if ret.status_code == 200:
-            return ret.json()
-        else:
-            print(ret.text)
-    except Exception as e:
-        print(e)
-
 
 if __name__ == '__main__':
     if not os.getenv("APP_ID", ""):
