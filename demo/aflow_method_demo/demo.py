@@ -7,6 +7,7 @@ import json
 from datetime import datetime
 
 load_dotenv(".env")
+load_dotenv("../.env")
 
 sig_generator = ASignature()
 base_url = os.getenv("AIFLOW_DOMAIN", "")
@@ -110,6 +111,7 @@ def create_third_party():
     url = f"{base_url}/aflow/api/flow/create_third_party"
     payload = {
         "title": "销售订单审批流程",
+        "thirdFlowCode": "SALES_ORDER",
         "initiateUrl": {
             "h5Url": "https://odoo.example.com/h5/sales/apply",
             "webUrl": "https://odoo.example.com/web/sales/apply"
@@ -154,8 +156,7 @@ def create_third_party():
 def online_third_party():
     url = f"{base_url}/aflow/api/flow/online_third_party"
     payload = {
-        "flowCode": "SALES_ORDER",
-        "flowVersion": 1,
+        "thirdFlowCode": "SALES_ORDER",
         "updateDesc": "初始版本上线"
     }
 
