@@ -6,6 +6,16 @@ from .core.scanner import EnhancedInterfaceScanner
 from .core.register import EnhancedServiceRegistrar
 from .core.config import config_manager
 from .utils.sign import ASignature
+from .client import (
+    AFlowClient, 
+    AFlowAPIClient,
+    Department,
+    User,
+    UrlConfig,
+    TaskInfo,
+    CCUser,
+    AllowedRule
+)
 
 __all__ = [
     "ApiRoute",
@@ -14,4 +24,12 @@ __all__ = [
     "EnhancedServiceRegistrar",
     "config_manager",
     "ASignature",
+    "AFlowClient",
+    "AFlowAPIClient",
+    "Department",
+    "User",
+    "UrlConfig",
+    "TaskInfo",
+    "CCUser",
+    "AllowedRule",
 ]
