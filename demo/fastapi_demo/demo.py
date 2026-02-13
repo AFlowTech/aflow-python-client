@@ -96,8 +96,8 @@ class StdRespUser(StandardResponse):
 def search_users(query: UserSearchQuery) -> StandardResponse:
     """搜索用户 - 使用BaseModel定义所有查询参数"""
     # query参数已自动验证和转换类型
-    # results = f"Hello World: {json.dumps(query.model_dump_json())}"
-    results = f"Hello World: {query.keyword}"
+    results = f"Hello World: {query.model_dump_json()}"
+    # results = f"Hello World: {query.keyword}"
     logger.info(f"search_users resp: {results}")
     return StandardResponse(success=True, data=results)
 
