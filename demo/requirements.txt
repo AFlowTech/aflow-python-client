@@ -3,4 +3,4 @@ pydantic>=2.0.0
 loguru>=0.7.0
 python-dotenv>=1.0.0
 uvicorn>=0.24.0
-git+https://github.com/AFlowTech/aflow-python-client.git@1.0.1
+git+https://github.com/AFlowTech/aflow-python-client.git@1.0.2
