@@ -1,10 +1,12 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 
 class UserSyncItem(BaseModel):
     """
     用户同步项
     """
+    model_config = ConfigDict(populate_by_name=True)  # 允许通过字段名初始化
+
     user_id: str = Field(..., alias="userId", description="用户ID（外部系统）")
     user_name: str = Field(..., alias="userName", description="用户名")
     real_name: str = Field(..., alias="realName", description="真实姓名")
