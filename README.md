@@ -29,7 +29,7 @@ https://github.com/AFlowTech/aflow-python-client
 pip install git+https://github.com/AFlowTech/aflow-python-client.git
 
 # 安装指定版本/标签
-pip install git+https://github.com/AFlowTech/aflow-python-client.git@1.0.0
+pip install git+https://github.com/AFlowTech/aflow-python-client.git@1.0.x
 
 # 安装指定分支
 pip install git+https://github.com/AFlowTech/aflow-python-client.git@main
