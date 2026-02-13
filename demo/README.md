@@ -28,5 +28,12 @@ pip install -r requirements.txt
 
 ## aflow_method_demo 使用
 
-在demo目录执行 ```python -m aflow_method_demo.demo```
 提供了如何调用aflow内置的方法，完成流程相关操作的示例。
+
+### http调用示例
+
+在demo目录执行 ```python -m aflow_method_demo.http_demo```
+
+### client调用示例
+
+在demo目录执行 ```python -m aflow_method_demo.client_demo```

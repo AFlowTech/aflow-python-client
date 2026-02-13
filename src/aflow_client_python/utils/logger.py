@@ -4,9 +4,14 @@ import logging
 import os
 from typing import Optional
 
-# Default logger configuration
-DEFAULT_LOG_LEVEL = logging.INFO #TODO: Change to INFO
-DEFAULT_LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+log_level = os.getenv("LOG_LEVEL", "INFO")  # 默认为 INFO
+if log_level == 'DEBUG':
+    DEFAULT_LOG_LEVEL = logging.DEBUG
+    DEFAULT_LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(module)s:%(funcName)s:%(lineno)d - %(message)s'
+else:
+    # Default logger configuration
+    DEFAULT_LOG_LEVEL = logging.INFO
+    DEFAULT_LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
 # Create logger cache
 _loggers = {}

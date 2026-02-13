@@ -1,5 +1,5 @@
 # 显式导入 sync 子模块的类
-from .sync import DepartmentSyncItem, SyncResult, SyncFailDetail, UserSyncItem
+from .sync import DepartmentSyncItem, SyncResult, SyncFailDetail, UserSyncItem, BindUserReq
 
 # 显式导入 third_party 子模块的类
 from .third_party import (
@@ -19,6 +19,7 @@ __all__ = [
     "SyncResult",
     "SyncFailDetail",
     "UserSyncItem",
+    "BindUserReq",
     "ThirdPartyFlowBase",
     "ThirdPartyFlowUrl",
     "ThirdPartyFlowCreateReq",

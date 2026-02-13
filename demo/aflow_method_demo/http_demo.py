@@ -2,8 +2,6 @@ import os
 
 from aflow_client_python import ASignature
 from dotenv import load_dotenv
-from pydantic import BaseModel, Field, ConfigDict
-from typing import List
 import requests
 import json
 from datetime import datetime
@@ -14,33 +12,23 @@ load_dotenv("../.env")
 sig_generator = ASignature()
 base_url = os.getenv("AIFLOW_DOMAIN", "")
 
-class Department(BaseModel):
-    model_config = ConfigDict(populate_by_name=True)  # 允许通过字段名初始化
-    """部门信息模型"""
-    dept_id: str = Field(..., alias="deptId", description="部门ID")
-    dept_name: str = Field(..., alias="deptName", description="部门名称")
-    order_num: int = Field(..., alias="orderNum", description="排序号")
-    status: int = Field(..., description="状态(1:启用, 0:禁用)")
-
-
 
 def sync_department():
     url = f"{base_url}/aflow/api/sys/sync/department"
-    departments = [
-        Department(
-            dept_id="0",
-            dept_name="根部门",
-            order_num=1,
-            status=1
-        ),
-        Department(
-            dept_id="1",
-            dept_name="第二个跟部门",
-            order_num=2,
+    payload = {"departments": [
+        dict(
+            deptId="0",
+            deptName="根部门",
+            orderNum=1,
             status=1,
         ),
-    ]
-    payload = {"departments": [dept.model_dump(by_alias=True) for dept in departments]}
+        dict(
+            deptId="1",
+            deptName="第二个跟部门",
+            orderNum=2,
+            status=1,
+        ),
+    ]}
 
     print(json.dumps(payload, ensure_ascii=False))
     headers = {
@@ -98,33 +86,32 @@ def sync_user():
 
 def bind_user():
     url = f"{base_url}/aflow/api/auth/bind"
-    request_data = {
+    payload = {
         "customUserCode": "11000011111",  # 贵公司Odoo系统的用户ID
+        "phoneNumber": "18888888888",  # 和飞书用户ID二选一
         # "linkUserCode": "feishu_user_12345"  # 飞书用户ID（如果已集成飞书）
     }
 
-    request_body = json.dumps(request_data)
-    signature = sig_generator.create_signature(request_body)
+    print(json.dumps(payload, ensure_ascii=False))
 
     headers = {
         "Content-Type": "application/json",
-        "A-Signature": signature
+        "X-A-Signature": sig_generator.create_signature(json.dumps(payload))
     }
-
     response = requests.post(
         url,
         headers=headers,
-        json=request_data
+        json=payload
     )
 
-    result = response.json()
-    print(result)
+    return response.text
 
 
 def create_third_party():
     url = f"{base_url}/aflow/api/flow/create_third_party"
     payload = {
         "title": "销售订单审批流程",
+        "thirdFlowCode": "SALES_ORDER",
         "initiateUrl": {
             "h5Url": "https://odoo.example.com/h5/sales/apply",
             "webUrl": "https://odoo.example.com/web/sales/apply"
@@ -169,9 +156,8 @@ def create_third_party():
 def online_third_party():
     url = f"{base_url}/aflow/api/flow/online_third_party"
     payload = {
-        "flowCode": "SALES_ORDER",
-        "flowVersion": 1,
-        "updateDesc": "初始版本上线"
+        "thirdFlowCode": "SALES_ORDER",
+        # "updateDesc": "初始版本上线"
     }
 
     print(json.dumps(payload, ensure_ascii=False))
@@ -200,6 +186,7 @@ def sync_task():
 
     payload = {
         "thirdOrderId": 123456,
+        "thirdFlowCode": "SALES_ORDER",
         "orderStatus": "ing",
         "orderResult": "ing",
         "initiator": "11000011111",  # 贵公司Odoo系统的用户ID
@@ -247,11 +234,13 @@ def sync_task():
         print(e)
 
 
+
 if __name__ == '__main__':
-    # print(os.getenv("APP_ID"))
-    print(sync_department())
+    if not os.getenv("APP_ID", ""):
+        raise Exception("未能从系统变量中加载必要参数，请检查后再试")
+    # print(sync_department())
     # print(sync_user())
     # print(bind_user())
     # print(create_third_party())
-    # print(online_third_party())
+    print(online_third_party())
     # print(sync_task())
