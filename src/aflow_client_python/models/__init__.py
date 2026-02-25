@@ -1,5 +1,12 @@
 # 显式导入 sync 子模块的类
-from .sync import DepartmentSyncItem, SyncResult, SyncFailDetail, UserSyncItem, BindUserReq
+from .sync import (
+    DepartmentSyncItem,
+    SyncResult,
+    SyncFailDetail,
+    UserSyncItem,
+    BindUserReq,
+    QueryOrderParam,
+)
 
 # 显式导入 third_party 子模块的类
 from .third_party import (

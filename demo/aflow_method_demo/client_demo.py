@@ -7,7 +7,8 @@ from aflow_client_python.models import (
     DepartmentSyncItem, UserSyncItem, BindUserReq,
     ThirdPartyFlowCreateReq, AllowedApplyRule, ThirdPartyFlowUrl,
     ThirdPartyFlowOnlineReq,
-    ThirdPartyTaskSyncReq, ThirdPartyTaskSyncCcUser, ThirdPartyTaskSyncTask)
+    ThirdPartyTaskSyncReq, ThirdPartyTaskSyncCcUser, ThirdPartyTaskSyncTask,
+    QueryOrderParam)
 from dotenv import load_dotenv
 
 load_dotenv(".env")
@@ -140,6 +141,14 @@ def sync_task():
     pprint.pp(ret)
 
 
+def query_by_order_id():
+    query_order_req = QueryOrderParam(
+        order_id="2602250000000014"
+    )
+    ret = aflow_client.query_by_order_id(query_order_req)
+    pprint.pp(ret)
+
+
 if __name__ == '__main__':
     # print(os.getenv("APP_ID"))
     # sync_department()
@@ -147,4 +156,5 @@ if __name__ == '__main__':
     # bind_user()
     # create_third_party()
     # online_third_party()
-    sync_task()
+    # sync_task()
+    query_by_order_id()

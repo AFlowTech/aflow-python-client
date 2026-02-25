@@ -21,6 +21,7 @@ try:
         ThirdPartyTaskSyncCcUser,
         ThirdPartyTaskSyncTask,
         ThirdPartyTaskSyncReq,
+        QueryOrderParam,
     )
     from ..utils import logger
     from ..utils.sign import ASignature
@@ -56,16 +57,23 @@ class AFlowClient:
         self.sig_generator = ASignature()
         self.logger = logger.get_logger()
 
-    def _make_request(self, url: str, payload: dict) -> dict:
+    def _make_request(self, url: str, payload: dict, method: str = "POST") -> dict:
         """通用请求方法，处理签名和发送请求"""
         headers = {
             "Content-Type": "application/json",
-            "X-A-Signature": self.sig_generator.create_signature(json.dumps(payload))
         }
-        self.logger.debug(f"Headers: {headers}")  # 添加这一行用于调试
+
         self.logger.debug(f"Payload: {payload}")  # 添加这一行用于调试
         try:
-            response = requests.post(url, json=payload, headers=headers)
+            if method == 'POST':
+                headers.update({"X-A-Signature": self.sig_generator.create_signature(json.dumps(payload))})
+                self.logger.debug(f"Headers: {headers}")  # 添加这一行用于调试
+                response = requests.post(url, json=payload, headers=headers)
+            else:
+                # 注意，对于GET方法，必须要压缩参数，否则由于空格的差异，会导致验签失败
+                headers.update({"X-A-Signature": self.sig_generator.create_signature(json.dumps(payload, separators=(',', ':')))})
+                self.logger.debug(f"Headers: {headers}")  # 添加这一行用于调试
+                response = requests.get(url, params=payload, headers=headers)
             if response.status_code == 200:
                 return response.json()
             else:
@@ -110,6 +118,12 @@ class AFlowClient:
         url = f"{self.base_url}/aflow/api/order/sync/task"
         payload = task_data.model_dump(by_alias=True)
         return self._make_request(url, payload)
+
+    def query_by_order_id(self, query_order_param: QueryOrderParam) -> dict:
+        """同步任务信息"""
+        url = f"{self.base_url}/aflow/api/order/open/query_by_order_id"
+        payload = query_order_param.model_dump(by_alias=True)
+        return self._make_request(url, payload, "GET")
 
 
 if __name__ == '__main__':
