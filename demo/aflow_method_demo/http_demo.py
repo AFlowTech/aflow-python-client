@@ -282,26 +282,31 @@ def handle_with_standard_formData():
     # 必填项：handleParam 和 formData
     handle_param = {
         "customUserCode": "11000011111",  # 操作人(贵公司-用户编码)-必传，贵公司Odoo系统的用户ID
-        "orderId": 2602250000000014,  # 必填：订单 ID
+        "orderId": "2602250000000052",  # 必填：订单 ID
         # "taskOrderId": 'b604a8ff-7fb6-4c40-9dfa-4b4cbd671660',  # 可选：当用户可能多个任务节点时-必传 ID
         "operateType": "pass",  # 必填：操作类型
         "remark": "审批通过",  # 可选：处理备注
         # "acceptUserCode": "user001",  # 可选：转交给谁(贵公司-用户编码)
         # "ccUserCode": ["user002"],  # 可选：抄送人用户编码列表
         # "ccContent": "请知悉",  # 可选：抄送内容
-        "userCode": "10016893"  # 必填：操作人(aiFlow用户编码)
     }
 
     form_data = {
         "values": [
             {
                 "name": "process_001",
-                "state": "ENABLED",
                 "value": {
                     "type": "string",
                     "data": "完成"
                 },
                 "children": []
+            },
+            {
+                "name": "processes",
+                "value": {
+                    "type": "string",
+                    "data": "没什么问题，通过审批"
+                }
             }
         ]
     }
@@ -421,5 +426,5 @@ if __name__ == '__main__':
     # print(create_third_party())
     # print(online_third_party())
     # print(sync_task())
-    print(query_by_order_id())
-    # print(handle_with_standard_formData())
+    # print(query_by_order_id())
+    print(handle_with_standard_formData())

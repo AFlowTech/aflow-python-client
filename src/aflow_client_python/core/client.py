@@ -22,7 +22,10 @@ try:
         ThirdPartyTaskSyncTask,
         ThirdPartyTaskSyncReq,
         QueryOrderParam,
-    )
+        HandleFlowReq,
+        HandleFlowByObjectReq
+
+)
     from ..utils import logger
     from ..utils.sign import ASignature
 except ImportError:
@@ -46,6 +49,9 @@ except ImportError:
         ThirdPartyTaskSyncCcUser,
         ThirdPartyTaskSyncTask,
         ThirdPartyTaskSyncReq,
+        QueryOrderParam,
+        HandleFlowReq,
+        HandleFlowByObjectReq
     )
     from aflow_client_python.utils import logger
     from aflow_client_python.utils.sign import ASignature
@@ -124,6 +130,16 @@ class AFlowClient:
         url = f"{self.base_url}/aflow/api/order/open/query_by_order_id"
         payload = query_order_param.model_dump(by_alias=True)
         return self._make_request(url, payload, "GET")
+
+    def handle_flow(self, handle_flow_req: HandleFlowReq):
+        url = f"{self.base_url}/aflow/api/order/open/handle_flow"
+        payload = handle_flow_req.model_dump(by_alias=True)
+        return self._make_request(url, payload)
+
+    def handle_flow_by_object(self, handle_flow_by_object_req: HandleFlowByObjectReq):
+        url = f"{self.base_url}/aflow/api/order/open/handle_flow_by_object"
+        payload = handle_flow_by_object_req.model_dump(by_alias=True)
+        return self._make_request(url, payload)
 
 
 if __name__ == '__main__':

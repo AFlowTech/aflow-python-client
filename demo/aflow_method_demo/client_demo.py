@@ -8,7 +8,13 @@ from aflow_client_python.models import (
     ThirdPartyFlowCreateReq, AllowedApplyRule, ThirdPartyFlowUrl,
     ThirdPartyFlowOnlineReq,
     ThirdPartyTaskSyncReq, ThirdPartyTaskSyncCcUser, ThirdPartyTaskSyncTask,
-    QueryOrderParam)
+    QueryOrderParam,
+    HandleFlowReq,
+    AHandleParam,
+    AValue,
+    AFieldValue,
+    AFormData,
+)
 from dotenv import load_dotenv
 
 load_dotenv(".env")
@@ -148,6 +154,76 @@ def query_by_order_id():
     ret = aflow_client.query_by_order_id(query_order_req)
     pprint.pp(ret)
 
+def handle_flow():
+    """
+    operateType可填类型：
+    	ACCEPT("accept", "领取"),
+        PASS("pass", "处理"),
+        TRANSFER("transfer", "转交"),
+        REBUT("rebut", "驳回"),
+        REJECT("reject", "拒绝"),
+        REVOKE("revoke", "撤销"),
+        CC("cc", "抄送"),
+
+        URGE("urge", "催办"),
+        REMARK("remark", "备注"),
+    """
+    handle_flow_req = HandleFlowReq(
+        handle_param=AHandleParam(
+            custom_user_code="11000011111",
+            order_id="2602250000000053",
+            operate_type="pass",
+        ),
+        form_data=AFormData(
+            values=[
+                AFieldValue(
+                    name="process_001",
+                    value=AValue(
+                        type="string",
+                        data="通过"
+                    )
+                )
+            ]
+        ),
+    )
+    ret = aflow_client.handle_flow(handle_flow_req)
+    pprint.pp(ret)
+
+def handle_flow_by_object():
+    """
+    operateType可填类型：
+    	ACCEPT("accept", "领取"),
+        PASS("pass", "处理"),
+        TRANSFER("transfer", "转交"),
+        REBUT("rebut", "驳回"),
+        REJECT("reject", "拒绝"),
+        REVOKE("revoke", "撤销"),
+        CC("cc", "抄送"),
+
+        URGE("urge", "催办"),
+        REMARK("remark", "备注"),
+    """
+    handle_flow_req = HandleFlowReq(
+        handle_param=AHandleParam(
+            custom_user_code="11000011111",
+            order_id="2602250000000053",
+            operate_type="pass",
+        ),
+        form_data=AFormData(
+            values=[
+                AFieldValue(
+                    name="process_001",
+                    value=AValue(
+                        type="string",
+                        data="通过"
+                    )
+                )
+            ]
+        ),
+    )
+    ret = aflow_client.handle_flow_by_object(handle_flow_req)
+    pprint.pp(ret)
+
 
 if __name__ == '__main__':
     # print(os.getenv("APP_ID"))
@@ -157,4 +233,5 @@ if __name__ == '__main__':
     # create_third_party()
     # online_third_party()
     # sync_task()
-    query_by_order_id()
+    # query_by_order_id()
+    handle_flow()

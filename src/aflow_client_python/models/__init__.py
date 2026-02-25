@@ -20,6 +20,16 @@ from .third_party import (
     ThirdPartyTaskSyncReq
 )
 
+from .handle import (
+    AHandleParam,
+    AValue,
+    AFieldValue,
+    AFormData,
+    HandleFlowReq,
+    PropertyMappingConfig,
+    HandleFlowByObjectReq,
+)
+
 # 定义 __all__，控制对外暴露的内容
 __all__ = [
     "DepartmentSyncItem",
@@ -34,5 +44,13 @@ __all__ = [
     "ThirdPartyFlowOnlineReq",
     "ThirdPartyTaskSyncCcUser",
     "ThirdPartyTaskSyncTask",
-    "ThirdPartyTaskSyncReq"
+    "ThirdPartyTaskSyncReq",
+    "QueryOrderParam",
+    "AHandleParam",
+    "AValue",
+    "AFieldValue",
+    "AFormData",
+    "HandleFlowReq",
+    "PropertyMappingConfig",
+    "HandleFlowByObjectReq",
 ]
