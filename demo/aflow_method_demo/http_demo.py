@@ -250,7 +250,6 @@ def query_by_order_id():
         # 注意，这里对payload dump的时候，不要使用 ensure_ascii=False！
         # 如果appId等变量已经注入到系统变量中，则可以只提供请求体
         "X-A-Signature": sig_generator.create_signature(str_params),
-        # "X-A-Signature": sig_generator.create_signature(str(params.get("orderId"))),
     }
 
     try:
@@ -295,10 +294,10 @@ def handle_flow():
     form_data = {
         "values": [
             {
-                "name": "handleResult",
+                "name": "handleResult",  # 表单元素的唯一标识
                 "value": {
-                    "type": "string",
-                    "data": "完成"
+                    "type": "string",    # 字段类型
+                    "data": "完成"        # 该元素具体的填写内容
                 },
                 "children": []
             },
