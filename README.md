@@ -1,5 +1,7 @@
 # 整体架构
-https://github.com/AFlowTech/aflow-python-client
+
+[源码地址](https://github.com/AFlowTech/aflow-python-client)
+[>>使用文档](https://cifgtqpgrh.feishu.cn/wiki/IlpbwqsCpin7yOkLpoZcrnqpnmw)
 
 引入统一参数模型概念，通过Pydantic BaseModel实现GET/POST参数的标准化定义。
 核心思想是：无论GET还是POST请求，都使用继承自BaseModel的类来定义所有参数，实现接口定义的完全统一。
