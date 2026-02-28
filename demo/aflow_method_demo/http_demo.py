@@ -1,6 +1,7 @@
 import os
 
 from aflow_client_python import ASignature
+from aflow_client_python.models.enums import OperateType, ValuePathType
 from dotenv import load_dotenv
 import requests
 import json
@@ -263,10 +264,10 @@ def query_by_order_id():
         print(e)
 
 
-def handle_with_standard_formData():
+def handle_flow():
     """
     通过定义标准的formData对任务订单进行处理，formData中根据表单中定义的唯一key进行赋值
-    operateType可填类型：
+    OperateType 可填类型：
     	ACCEPT("accept", "领取"),
         PASS("pass", "处理"),
         TRANSFER("transfer", "转交"),
@@ -284,7 +285,7 @@ def handle_with_standard_formData():
         "customUserCode": "11000011111",  # 操作人(贵公司-用户编码)-必传，贵公司Odoo系统的用户ID
         "orderId": "2602250000000052",  # 必填：订单 ID
         # "taskOrderId": 'b604a8ff-7fb6-4c40-9dfa-4b4cbd671660',  # 可选：当用户可能多个任务节点时-必传 ID
-        "operateType": "pass",  # 必填：操作类型
+        "operateType": OperateType.PASS,  # 必填：操作类型
         "remark": "审批通过",  # 可选：处理备注
         # "acceptUserCode": "user001",  # 可选：转交给谁(贵公司-用户编码)
         # "ccUserCode": ["user002"],  # 可选：抄送人用户编码列表
@@ -294,7 +295,7 @@ def handle_with_standard_formData():
     form_data = {
         "values": [
             {
-                "name": "process_001",
+                "name": "handleResult",
                 "value": {
                     "type": "string",
                     "data": "完成"
@@ -336,11 +337,10 @@ def handle_with_standard_formData():
         print(e)
 
 
-def handle_with_props_formData():
+def handle_flow_by_object():
     """
-    TODO：未完成
     通过通用的formData对任务订单进行处理，formData中的字段通过propertyMapping进行映射配置
-    operateType可填类型：
+    OperateType 可填类型：
     	ACCEPT("accept", "领取"),
         PASS("pass", "处理"),
         TRANSFER("transfer", "转交"),
@@ -350,7 +350,7 @@ def handle_with_props_formData():
         CC("cc", "抄送"),
         URGE("urge", "催办"),
         REMARK("remark", "备注"),
-    valuePath可填：
+    ValuePathType 可填：
     	RANGE_FROM("rangeFrom", "开始时间"),
         RANGE_TO("rangeTo", "结束时间"),
         OPTION_LABEL("optionLabel", "名称"),
@@ -363,37 +363,46 @@ def handle_with_props_formData():
     # 必填项：handleParam 和 formData
     handle_param = {
         "customUserCode": "11000011111",  # 操作人(贵公司-用户编码)-必传，贵公司Odoo系统的用户ID
-        "orderId": 123456,  # 必填：订单 ID
-        "taskOrderId": 789012,  # 可选：当用户可能多个任务节点时-必传 ID
-        "operateType": "approve",  # 必填：操作类型
+        "orderId": 2602280000000014,  # 必填：订单 ID
+        # "taskOrderId": 789012,  # 可选：当用户可能多个任务节点时-必传 ID
+        "operateType": OperateType.PASS,  # 必填：操作类型
         "remark": "审批通过",  # 可选：处理备注
-        "acceptUserCode": "user001",  # 可选：转交给谁(贵公司-用户编码)
-        "ccUserCode": ["user002"],  # 可选：抄送人用户编码列表
-        "ccContent": "请知悉",  # 可选：抄送内容
-        "userCode": "operator001"  # 必填：操作人(aiFlow用户编码)
+        # "acceptUserCode": "user001",  # 可选：转交给谁(贵公司-用户编码)
+        # "ccUserCode": ["user002"],  # 可选：抄送人用户编码列表
+        # "ccContent": "请知悉",  # 可选：抄送内容
+        # "userCode": "operator001"  # 必填：操作人(aiFlow用户编码)
     }
 
     form_data = {
-        "field1": "value1",  # 表单字段 1
-        "field2": "value2"  # 表单字段 2
+        "approveResult": "完成", # 审批
+        "approveRemark": "已确认，可以进行"  # 审批意见
     }
 
     property_mapping = [  # 可选：字段映射配置
         {
-            "fieldFullName": "form.field1",
-            "fieldName": "field1",
+            "fieldFullName": "handleResult",# 必填，简单字段可以和fieldName相同，多级字段的话，需要拼接完整路径
+            "fieldName": "handleResult",
             "visible": True,  # 是否可见
-            "valuePath": "",  # 可选：字段值路径
-            "propertyPath": "images.url",  # 映射属性全路径path
-            "valuePropertyPath": "url",
+            "valuePath": ValuePathType.OPTION_VALUE,  # 可选：字段值路径
+            "propertyPath": "approveResult",  # form_data中的key值
+            # "valuePropertyPath": "url",
             # 不包括全路径、只是对应ValuePathType的属性, 如images.url 、 PropertyPath==images.url ，ValuePropertyPath == url
-        }
+        },
+        {
+            "fieldFullName": "processes",
+            "fieldName": "processes",
+            "visible": True,  # 是否可见
+            "valuePath": ValuePathType.NONE_PATH,  # 可选：字段值路径
+            "propertyPath": "approveRemark",  # form_data中的key值
+            # "valuePropertyPath": "url",
+            # 不包括全路径、只是对应ValuePathType的属性, 如images.url 、 PropertyPath==images.url ，ValuePropertyPath == url
+        },
     ]
 
     # 构造请求体
     payload = {
         "handleParam": handle_param,
-        "formData": form_data,
+        "formData": json.dumps(form_data),
         "propertyMapping": property_mapping
     }
 
@@ -417,7 +426,6 @@ def handle_with_props_formData():
 
 
 if __name__ == '__main__':
-    # [2026-02-25 16:21:29.062]traceId[aflow.20260225162129_4c39153cff3e454d8d03baa268021462]  WARN AuthSignatureAspect:82] verifySignature signature fail:ASignature(enterpriseCode=aflow_qiwei, appId=wx7f9d7b284c90ef46, timestamp=1772007688870, cipher=8dece95a35416d308760dde77bcdbbc8),requestBody:{"orderId":"2602250000000014"}
     if not os.getenv("APP_ID", ""):
         raise Exception("未能从系统变量中加载必要参数，请检查后再试")
     # print(sync_department())
@@ -427,4 +435,5 @@ if __name__ == '__main__':
     # print(online_third_party())
     # print(sync_task())
     # print(query_by_order_id())
-    print(handle_with_standard_formData())
+    # print(handle_flow())
+    print(handle_flow_by_object())

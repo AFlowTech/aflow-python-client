@@ -5,7 +5,7 @@ from typing import List, Optional, ForwardRef
 class AHandleParam(BaseModel):
     order_id: int = Field(..., alias="orderId", description="必填，流程订单编码")
     task_order_id: Optional[str] = Field(None, alias="taskOrderId", description="任务ID，当用户可能多个任务节点时必传")
-    operate_type: str = Field(..., alias="operateType", description="必填，操作类型")
+    operate_type: str = Field(..., alias="operateType", description="必填，操作类型，参考：OperateType")
     cc_user_code: Optional[List[str]] = Field(None, alias="ccUserCode", description="抄送给谁（贵公司-用户编码）")
     accept_user_code: Optional[str] = Field(None, alias="acceptUserCode", description="转交给谁（贵公司-用户编码）")
     cc_content: Optional[str] = Field(None, alias="ccContent", description="抄送内容")
@@ -65,11 +65,11 @@ class HandleFlowReq(BaseModel):
 
 
 class PropertyMappingConfig(BaseModel):
-    field_full_name: Optional[str] = Field(None, alias="fieldFullName", description="表单字段名或fullName")
-    field_name: Optional[str] = Field(None, alias="fieldName", description="表单字段名，忽略path")
-    value_path: Optional[str] = Field(None, alias="valuePath", description="值路径类型")
-    property_path: Optional[str] = Field(None, alias="propertyPath", description="映射属性全路径path")
-    value_property_path: Optional[str] = Field(None, alias="valuePropertyPath", description="值属性路径")
+    field_full_name: str = Field(..., alias="fieldFullName", description="必填，简单字段与filedName一致，复杂字段需要包含完整路径")
+    field_name: str = Field(..., alias="fieldName", description="表单字段名，忽略path部分")
+    value_path: Optional[str] = Field(None, alias="valuePath", description="值路径类型，参考：ValuePathType")
+    property_path: str = Field(..., alias="propertyPath", description="映射属性formData map中的key")
+    value_property_path: Optional[str] = Field(None, alias="valuePropertyPath", description="值属性路径，不包括全路径、只是对应ValuePathType的属性, 如images.url 、 PropertyPath==images.url ，ValuePropertyPath == url")
     visible: bool = Field(..., description="是否可见")
     model_config = ConfigDict(populate_by_name=True)  # 允许通过字段名初始化
 
@@ -82,7 +82,7 @@ class HandleFlowByObjectReq(BaseModel):
     handle_param: AHandleParam = Field(..., alias="handleParam", description="基本信息")
     form_data: str = Field(..., alias="formData",
                                      description="对象或表单数据")
-    property_mapping: PropertyMappingConfig = Field(..., alias="propertyMapping",
+    property_mapping: List[PropertyMappingConfig] = Field(..., alias="propertyMapping",
                                             description="当使用泛型时，该字段必填")
 
     model_config = ConfigDict(populate_by_name=True)  # 允许通过字段名初始化

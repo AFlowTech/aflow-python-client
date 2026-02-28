@@ -1,3 +1,4 @@
+import json
 import os
 import pprint
 from datetime import datetime
@@ -14,7 +15,10 @@ from aflow_client_python.models import (
     AValue,
     AFieldValue,
     AFormData,
+    PropertyMappingConfig,
+    HandleFlowByObjectReq,
 )
+from aflow_client_python.models.enums import OperateType, ValuePathType
 from dotenv import load_dotenv
 
 load_dotenv(".env")
@@ -154,6 +158,7 @@ def query_by_order_id():
     ret = aflow_client.query_by_order_id(query_order_req)
     pprint.pp(ret)
 
+
 def handle_flow():
     """
     operateType可填类型：
@@ -172,7 +177,7 @@ def handle_flow():
         handle_param=AHandleParam(
             custom_user_code="11000011111",
             order_id="2602250000000053",
-            operate_type="pass",
+            operate_type=OperateType.PASS,
         ),
         form_data=AFormData(
             values=[
@@ -189,6 +194,7 @@ def handle_flow():
     ret = aflow_client.handle_flow(handle_flow_req)
     pprint.pp(ret)
 
+
 def handle_flow_by_object():
     """
     operateType可填类型：
@@ -203,23 +209,36 @@ def handle_flow_by_object():
         URGE("urge", "催办"),
         REMARK("remark", "备注"),
     """
-    handle_flow_req = HandleFlowReq(
+    form_data = {
+        "approveResult": "完成",  # 审批
+        "approveRemark": "已确认，可以进行"  # 审批意见
+    }
+
+    handle_flow_req = HandleFlowByObjectReq(
         handle_param=AHandleParam(
             custom_user_code="11000011111",
-            order_id="2602250000000053",
-            operate_type="pass",
+            order_id="2602280000000015",
+            operate_type=OperateType.PASS,
         ),
-        form_data=AFormData(
-            values=[
-                AFieldValue(
-                    name="process_001",
-                    value=AValue(
-                        type="string",
-                        data="通过"
-                    )
-                )
-            ]
-        ),
+        form_data=json.dumps(form_data),
+        property_mapping=[
+            PropertyMappingConfig.model_construct(
+                field_full_name="handleResult",
+                field_name="handleResult",
+                visible=True,
+                value_path=ValuePathType.OPTION_VALUE,
+                property_path="approveResult",
+                # 不包括全路径、只是对应ValuePathType的属性, 如images.url 、 PropertyPath==images.url ，ValuePropertyPath == url
+            ),
+            PropertyMappingConfig.model_construct(
+                field_full_name="processes",
+                field_name="processes",
+                visible=True,
+                value_path=ValuePathType.NONE_PATH,
+                property_path="approveRemark",
+                # 不包括全路径、只是对应ValuePathType的属性, 如images.url 、 PropertyPath==images.url ，ValuePropertyPath == url
+            )
+        ]
     )
     ret = aflow_client.handle_flow_by_object(handle_flow_req)
     pprint.pp(ret)
@@ -234,4 +253,5 @@ if __name__ == '__main__':
     # online_third_party()
     # sync_task()
     # query_by_order_id()
-    handle_flow()
+    # handle_flow()
+    handle_flow_by_object()

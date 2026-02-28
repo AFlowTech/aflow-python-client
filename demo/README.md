@@ -37,3 +37,16 @@ pip install -r requirements.txt
 ### client调用示例
 
 在demo目录执行 ```python -m aflow_method_demo.client_demo```
+
+# Handle Flow的接口说明
+
+### 获取元素的唯一标识
+
+在处理节点过程中，需要获取审批节点表单的元素的唯一标识，可以通过以下方式获取。
+审批的表单为标准表单，表单中元素的唯一标识可在不同审批节点中重用。
+
+![获取表单元素唯一标识数据示例](./img/form_data_example_01.png)
+*图1: 通过编辑流程，进入流程设计页，查看审批节点的按钮表单*
+
+![获取表单元素唯一标识数据示例](./img/form_data_example_02.png)
+*图2: 进入表单，查看指定元素的唯一标识*
