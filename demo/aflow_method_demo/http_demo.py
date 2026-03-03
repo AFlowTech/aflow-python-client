@@ -283,7 +283,7 @@ def handle_flow():
     handle_param = {
         "customUserCode": "11000011111",  # 操作人(贵公司-用户编码)-必传，贵公司Odoo系统的用户ID
         "orderId": "2602250000000052",  # 必填：订单 ID
-        # "taskOrderId": 'b604a8ff-7fb6-4c40-9dfa-4b4cbd671660',  # 可选：当用户可能多个任务节点时-必传 ID
+        # "taskOrderId": 'b604a8ff-7fb6-4c40-9dfa-4b4cbd671660',  # 可选：当用户可能多个任务节点时-必传 ID, 该值通过调用<获取任务流程信息>来获取。主要用来标识审批的流程节点
         "operateType": OperateType.PASS,  # 必填：操作类型
         "remark": "审批通过",  # 可选：处理备注
         # "acceptUserCode": "user001",  # 可选：转交给谁(贵公司-用户编码)
@@ -363,7 +363,7 @@ def handle_flow_by_object():
     handle_param = {
         "customUserCode": "11000011111",  # 操作人(贵公司-用户编码)-必传，贵公司Odoo系统的用户ID
         "orderId": 2602280000000014,  # 必填：订单 ID
-        # "taskOrderId": 789012,  # 可选：当用户可能多个任务节点时-必传 ID
+        # "taskOrderId": 789012,  # 可选：当用户可能多个任务节点时-必传 ID, 该值通过调用<获取任务流程信息>来获取。主要用来标识审批的流程节点
         "operateType": OperateType.PASS,  # 必填：操作类型
         "remark": "审批通过",  # 可选：处理备注
         # "acceptUserCode": "user001",  # 可选：转交给谁(贵公司-用户编码)
