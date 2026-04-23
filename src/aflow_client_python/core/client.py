@@ -13,6 +13,7 @@ try:
         SyncFailDetail,
         UserSyncItem,
         BindUserReq,
+        OrderListQueryParam,
         ThirdPartyFlowBase,
         ThirdPartyFlowCreateReq,
         ThirdPartyFlowOnlineReq,
@@ -22,6 +23,7 @@ try:
         ThirdPartyTaskSyncTask,
         ThirdPartyTaskSyncReq,
         QueryOrderParam,
+        QueryUserParam,
         HandleFlowReq,
         HandleFlowByObjectReq
 
@@ -41,6 +43,7 @@ except ImportError:
         SyncFailDetail,
         UserSyncItem,
         BindUserReq,
+        OrderListQueryParam,
         ThirdPartyFlowBase,
         ThirdPartyFlowCreateReq,
         ThirdPartyFlowOnlineReq,
@@ -50,6 +53,7 @@ except ImportError:
         ThirdPartyTaskSyncTask,
         ThirdPartyTaskSyncReq,
         QueryOrderParam,
+        QueryUserParam,
         HandleFlowReq,
         HandleFlowByObjectReq
     )
@@ -128,7 +132,19 @@ class AFlowClient:
     def query_by_order_id(self, query_order_param: QueryOrderParam) -> dict:
         """同步任务信息"""
         url = f"{self.base_url}/aflow/api/order/open/query_by_order_id"
-        payload = query_order_param.model_dump(by_alias=True)
+        payload = self._normalize_get_payload(query_order_param.model_dump(by_alias=True, exclude_none=True))
+        return self._make_request(url, payload, "GET")
+
+    def all_order_list(self, order_list_query: OrderListQueryParam) -> dict:
+        """查询全量订单列表"""
+        url = f"{self.base_url}/aflow/api/order/open/allList"
+        payload = self._normalize_get_payload(order_list_query.model_dump(by_alias=True, exclude_none=True))
+        return self._make_request(url, payload, "GET")
+
+    def query_user_by_user_code(self, query_user_param: QueryUserParam) -> dict:
+        """根据用户编码查询用户详情"""
+        url = f"{self.base_url}/aflow/api/user/query_by_user_code"
+        payload = self._normalize_get_payload(query_user_param.model_dump(by_alias=True, exclude_none=True))
         return self._make_request(url, payload, "GET")
 
     def handle_flow(self, handle_flow_req: HandleFlowReq):
@@ -140,6 +156,19 @@ class AFlowClient:
         url = f"{self.base_url}/aflow/api/order/open/handle_flow_by_object"
         payload = handle_flow_by_object_req.model_dump(by_alias=True)
         return self._make_request(url, payload)
+
+    def _normalize_get_payload(self, payload: dict) -> dict:
+        normalized = {}
+        for key, value in payload.items():
+            if value is None:
+                continue
+            if isinstance(value, list):
+                normalized[key] = ",".join(str(item) for item in value)
+            elif isinstance(value, bool):
+                normalized[key] = "true" if value else "false"
+            else:
+                normalized[key] = str(value)
+        return normalized
 
 
 if __name__ == '__main__':

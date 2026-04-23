@@ -10,6 +10,8 @@ from aflow_client_python.models import (
     ThirdPartyFlowOnlineReq,
     ThirdPartyTaskSyncReq, ThirdPartyTaskSyncCcUser, ThirdPartyTaskSyncTask,
     QueryOrderParam,
+    OrderListQueryParam,
+    QueryUserParam,
     HandleFlowReq,
     AHandleParam,
     AValue,
@@ -159,6 +161,24 @@ def query_by_order_id():
     pprint.pp(ret)
 
 
+def all_order_list():
+    order_list_query = OrderListQueryParam(
+        page_index=1,
+        page_size=10,
+        order_status="ing"
+    )
+    ret = aflow_client.all_order_list(order_list_query)
+    pprint.pp(ret)
+
+
+def query_user_by_user_code():
+    query_user_req = QueryUserParam(
+        user_code="10000131"
+    )
+    ret = aflow_client.query_user_by_user_code(query_user_req)
+    pprint.pp(ret)
+
+
 def handle_flow():
     """
     operateType可填类型：
@@ -253,5 +273,7 @@ if __name__ == '__main__':
     # online_third_party()
     # sync_task()
     # query_by_order_id()
+    # all_order_list()
+    # query_user_by_user_code()
     # handle_flow()
     handle_flow_by_object()

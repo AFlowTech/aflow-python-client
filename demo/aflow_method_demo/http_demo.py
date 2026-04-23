@@ -250,10 +250,61 @@ def query_by_order_id():
         # 注意，这里对payload dump的时候，不要使用 ensure_ascii=False！
         # 如果appId等变量已经注入到系统变量中，则可以只提供请求体
         "X-A-Signature": sig_generator.create_signature(str_params),
+        # "X-A-Signature": sig_generator.create_signature(str(params.get("orderId"))),
     }
 
     try:
         print(url)
+        ret = requests.get(url, params=payload, headers=headers)
+        if ret.status_code == 200:
+            return ret.json()
+        else:
+            print(ret.text)
+    except Exception as e:
+        print(e)
+
+
+def all_order_list():
+    """
+    查询全量订单列表
+    """
+    url = f"{base_url}/aflow/api/order/open/allList"
+    payload = {
+        "page.index": "1",
+        "page.size": "10",
+        "orderStatus": "ing"
+    }
+
+    str_params = json.dumps(payload, separators=(',', ':'))
+    headers = {
+        "Content-Type": "application/json",
+        "X-A-Signature": sig_generator.create_signature(str_params),
+    }
+
+    try:
+        ret = requests.get(url, params=payload, headers=headers)
+        if ret.status_code == 200:
+            return ret.json()
+        else:
+            print(ret.text)
+    except Exception as e:
+        print(e)
+
+
+def query_user_by_user_code():
+    """
+    根据用户编码查询用户详情
+    """
+    url = f"{base_url}/aflow/api/user/query_by_user_code"
+    payload = {"userCode": "10000131"}
+
+    str_params = json.dumps(payload, separators=(',', ':'))
+    headers = {
+        "Content-Type": "application/json",
+        "X-A-Signature": sig_generator.create_signature(str_params),
+    }
+
+    try:
         ret = requests.get(url, params=payload, headers=headers)
         if ret.status_code == 200:
             return ret.json()
@@ -283,7 +334,7 @@ def handle_flow():
     handle_param = {
         "customUserCode": "11000011111",  # 操作人(贵公司-用户编码)-必传，贵公司Odoo系统的用户ID
         "orderId": "2602250000000052",  # 必填：订单 ID
-        # "taskOrderId": 'b604a8ff-7fb6-4c40-9dfa-4b4cbd671660',  # 可选：当用户可能多个任务节点时-必传 ID, 该值通过调用<获取任务流程信息>来获取。主要用来标识审批的流程节点
+        # "taskOrderId": 'b604a8ff-7fb6-4c40-9dfa-4b4cbd671660',  # 可选：当用户可能多个任务节点时-必传 ID
         "operateType": OperateType.PASS,  # 必填：操作类型
         "remark": "审批通过",  # 可选：处理备注
         # "acceptUserCode": "user001",  # 可选：转交给谁(贵公司-用户编码)
@@ -294,10 +345,10 @@ def handle_flow():
     form_data = {
         "values": [
             {
-                "name": "handleResult",  # 表单元素的唯一标识
+                "name": "handleResult",
                 "value": {
-                    "type": "string",    # 字段类型
-                    "data": "完成"        # 该元素具体的填写内容
+                    "type": "string",
+                    "data": "完成"
                 },
                 "children": []
             },
@@ -363,7 +414,7 @@ def handle_flow_by_object():
     handle_param = {
         "customUserCode": "11000011111",  # 操作人(贵公司-用户编码)-必传，贵公司Odoo系统的用户ID
         "orderId": 2602280000000014,  # 必填：订单 ID
-        # "taskOrderId": 789012,  # 可选：当用户可能多个任务节点时-必传 ID, 该值通过调用<获取任务流程信息>来获取。主要用来标识审批的流程节点
+        # "taskOrderId": 789012,  # 可选：当用户可能多个任务节点时-必传 ID
         "operateType": OperateType.PASS,  # 必填：操作类型
         "remark": "审批通过",  # 可选：处理备注
         # "acceptUserCode": "user001",  # 可选：转交给谁(贵公司-用户编码)
@@ -434,5 +485,7 @@ if __name__ == '__main__':
     # print(online_third_party())
     # print(sync_task())
     # print(query_by_order_id())
+    # print(all_order_list())
+    # print(query_user_by_user_code())
     # print(handle_flow())
     print(handle_flow_by_object())

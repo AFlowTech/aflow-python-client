@@ -6,6 +6,8 @@ from .sync import (
     UserSyncItem,
     BindUserReq,
     QueryOrderParam,
+    OrderListQueryParam,
+    QueryUserParam,
 )
 
 # 显式导入 third_party 子模块的类
@@ -37,6 +39,8 @@ __all__ = [
     "SyncFailDetail",
     "UserSyncItem",
     "BindUserReq",
+    "OrderListQueryParam",
+    "QueryUserParam",
     "ThirdPartyFlowBase",
     "ThirdPartyFlowUrl",
     "ThirdPartyFlowCreateReq",
