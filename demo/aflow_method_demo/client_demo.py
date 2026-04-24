@@ -173,7 +173,7 @@ def all_order_list():
 
 def query_user_by_user_code():
     query_user_req = QueryUserParam(
-        user_code="10000131"
+        user_code="10016893"
     )
     ret = aflow_client.query_user_by_user_code(query_user_req)
     pprint.pp(ret)
@@ -264,10 +264,12 @@ def handle_flow_by_object():
     pprint.pp(ret)
 
 
+
+
 if __name__ == '__main__':
     # print(os.getenv("APP_ID"))
     # sync_department()
-    # sync_user()
+    sync_user()
     # bind_user()
     # create_third_party()
     # online_third_party()
@@ -276,4 +278,4 @@ if __name__ == '__main__':
     # all_order_list()
     # query_user_by_user_code()
     # handle_flow()
-    handle_flow_by_object()
+    # handle_flow_by_object()

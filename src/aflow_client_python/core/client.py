@@ -137,13 +137,13 @@ class AFlowClient:
 
     def all_order_list(self, order_list_query: OrderListQueryParam) -> dict:
         """查询全量订单列表"""
-        url = f"{self.base_url}/aflow/api/order/open/allList"
+        url = f"{self.base_url}/aflow/order/query/allList"
         payload = self._normalize_get_payload(order_list_query.model_dump(by_alias=True, exclude_none=True))
         return self._make_request(url, payload, "GET")
 
     def query_user_by_user_code(self, query_user_param: QueryUserParam) -> dict:
         """根据用户编码查询用户详情"""
-        url = f"{self.base_url}/aflow/api/user/query_by_user_code"
+        url = f"{self.base_url}/aflow/user/get"
         payload = self._normalize_get_payload(query_user_param.model_dump(by_alias=True, exclude_none=True))
         return self._make_request(url, payload, "GET")
 

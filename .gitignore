@@ -25,3 +25,6 @@ __pycache__/
 
 encrypt_lib/
 
+CLAUDE.md
+./claude/
+tests/
