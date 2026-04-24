@@ -1,22 +1,23 @@
-from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
 
+from pydantic import Field
 
-class ThirdPartyFlowUrl(BaseModel):
+from ..base import AFlowBaseModel
+
+
+class ThirdPartyFlowUrl(AFlowBaseModel):
     """
     三方流程URL配置
     """
-    model_config = ConfigDict(populate_by_name=True)  # 允许通过字段名初始化
 
     h5_url: Optional[str] = Field(None, alias="h5Url", description="H5端地址")
     web_url: Optional[str] = Field(None, alias="webUrl", description="PC端地址")
 
 
-class AllowedApplyRule(BaseModel):
+class AllowedApplyRule(AFlowBaseModel):
     """
     允许发起/管理规则
     """
-    model_config = ConfigDict(populate_by_name=True)  # 允许通过字段名初始化
 
     allowed_apply_type: str = Field(..., alias="allowedApplyType", description="允许发起类型（ALL-全部，CUSTOM-自定义）")
     user_codes: Optional[List[str]] = Field(None, alias="userCodes", description="允许发起的用户编码列表")
@@ -24,11 +25,10 @@ class AllowedApplyRule(BaseModel):
     user_group_codes: Optional[List[str]] = Field(None, alias="userGroupCodes", description="允许发起的用户组编码列表")
 
 
-class ThirdPartyFlowCreateReq(BaseModel):
+class ThirdPartyFlowCreateReq(AFlowBaseModel):
     """
     创建三方流程定义请求
     """
-    model_config = ConfigDict(populate_by_name=True)  # 允许通过字段名初始化
     title: str = Field(..., alias="title", description="流程标题")
     external_system_code: Optional[str] = Field("odoo", alias="externalSystemCode",
                                                 description="外部系统编码（可选，默认为 odoo）")

@@ -1,7 +1,13 @@
 import json
 import os
 import pprint
+import sys
 from datetime import datetime
+
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+SRC_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", "..", "src"))
+if SRC_DIR not in sys.path:
+    sys.path.insert(0, SRC_DIR)
 
 from aflow_client_python import AFlowClient
 from aflow_client_python.models import (
@@ -173,7 +179,7 @@ def all_order_list():
 
 def query_user_by_user_code():
     query_user_req = QueryUserParam(
-        user_code="10000131"
+        user_code="10016893"
     )
     ret = aflow_client.query_user_by_user_code(query_user_req)
     pprint.pp(ret)
@@ -264,6 +270,8 @@ def handle_flow_by_object():
     pprint.pp(ret)
 
 
+
+
 if __name__ == '__main__':
     # print(os.getenv("APP_ID"))
     # sync_department()
@@ -274,6 +282,6 @@ if __name__ == '__main__':
     # sync_task()
     # query_by_order_id()
     # all_order_list()
-    # query_user_by_user_code()
+     query_user_by_user_code()
     # handle_flow()
-    handle_flow_by_object()
+    # handle_flow_by_object()

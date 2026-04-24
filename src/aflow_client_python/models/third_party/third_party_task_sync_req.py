@@ -1,8 +1,11 @@
-from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
 
+from pydantic import Field
 
-class ThirdPartyTaskSyncTask(BaseModel):
+from ..base import AFlowBaseModel
+
+
+class ThirdPartyTaskSyncTask(AFlowBaseModel):
     """
     三方任务同步任务项
     """
@@ -22,10 +25,8 @@ class ThirdPartyTaskSyncTask(BaseModel):
     show_pc: Optional[bool] = Field(None, alias="showPc", description="PC是否展示")
     show_mobile: Optional[bool] = Field(None, alias="showMobile", description="手机是否展示")
 
-    model_config = ConfigDict(populate_by_name=True)  # 允许通过字段名初始化
 
-
-class ThirdPartyTaskSyncCcUser(BaseModel):
+class ThirdPartyTaskSyncCcUser(AFlowBaseModel):
     """
     三方任务同步抄送人
     """
@@ -33,10 +34,8 @@ class ThirdPartyTaskSyncCcUser(BaseModel):
     user_code: str = Field(..., alias="userCode", description="抄送人编码(贵公司-用户编码)")
     cc_time: Optional[str] = Field(None, alias="ccTime", description="抄送时间（格式：yyyy-MM-dd HH:mm:ss）")
 
-    model_config = ConfigDict(populate_by_name=True)  # 允许通过字段名初始化
 
-
-class ThirdPartyTaskSyncReq(BaseModel):
+class ThirdPartyTaskSyncReq(AFlowBaseModel):
     """
     三方任务同步请求
     """
@@ -60,5 +59,3 @@ class ThirdPartyTaskSyncReq(BaseModel):
     cc_users: Optional[List[ThirdPartyTaskSyncCcUser]] = Field(None, alias="ccUsers",
                                                                description="抄送人列表（非必传，有就传，没有就不传）")
     tasks: List[ThirdPartyTaskSyncTask] = Field(..., alias="tasks", description="任务列表（包含待办和已完成任务）")
-
-    model_config = ConfigDict(populate_by_name=True)  # 允许通过字段名初始化
