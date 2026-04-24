@@ -1,10 +1,12 @@
-from pydantic import BaseModel, Field, ConfigDict
-from typing import Optional, List
+from typing import Optional
+
+from pydantic import Field
+
+from ..base import AFlowBaseModel
 
 
-class DepartmentSyncItem(BaseModel):
+class DepartmentSyncItem(AFlowBaseModel):
     """部门信息模型"""
-    model_config = ConfigDict(populate_by_name=True)  # 允许通过字段名初始化
 
     dept_id: str = Field(..., alias="deptId", description="部门ID")
     dept_name: str = Field(..., alias="deptName", description="部门名称")

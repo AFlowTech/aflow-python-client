@@ -1,10 +1,12 @@
-from pydantic import BaseModel, Field, ConfigDict
-from typing import Optional, List
+from typing import List, Optional
+
+from pydantic import Field
+
+from ..base import AFlowBaseModel
 
 
-class OrderListQueryParam(BaseModel):
+class OrderListQueryParam(AFlowBaseModel):
     """订单列表查询参数"""
-    model_config = ConfigDict(populate_by_name=True)
 
     key: Optional[str] = Field(None, alias="key", description="搜索关键字")
     flow_code: Optional[str] = Field(None, alias="flowCode", description="流程编码")

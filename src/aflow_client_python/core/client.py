@@ -96,65 +96,65 @@ class AFlowClient:
     def sync_department(self, departments: List[DepartmentSyncItem]) -> dict:
         """同步部门信息"""
         url = f"{self.base_url}/aflow/api/sys/sync/department"
-        payload = {"departments": [dept.model_dump(by_alias=True) for dept in departments]}
+        payload = {"departments": [self._model_to_dict(dept, by_alias=True) for dept in departments]}
         return self._make_request(url, payload)
 
     def sync_user(self, users: List[UserSyncItem]) -> dict:
         """同步用户信息"""
         url = f"{self.base_url}/aflow/api/sys/sync/user"
-        payload = {"users": [user.model_dump(by_alias=True) for user in users]}
+        payload = {"users": [self._model_to_dict(user, by_alias=True) for user in users]}
         return self._make_request(url, payload)
 
     def bind_user(self, bind_user_req: BindUserReq) -> dict:
         """绑定用户"""
         url = f"{self.base_url}/aflow/api/auth/bind"
-        payload = bind_user_req.model_dump(by_alias=True)
+        payload = self._model_to_dict(bind_user_req, by_alias=True)
         return self._make_request(url, payload)
 
     def create_third_party(self, flow_data: ThirdPartyFlowCreateReq) -> dict:
         """创建第三方流程"""
         url = f"{self.base_url}/aflow/api/flow/create_third_party"
-        payload = flow_data.model_dump(by_alias=True)
+        payload = self._model_to_dict(flow_data, by_alias=True)
         return self._make_request(url, payload)
 
     def online_third_party(self, flow_data: ThirdPartyFlowOnlineReq) -> dict:
         """上线第三方流程"""
         url = f"{self.base_url}/aflow/api/flow/online_third_party"
-        payload = flow_data.model_dump(by_alias=True)
+        payload = self._model_to_dict(flow_data, by_alias=True)
         return self._make_request(url, payload)
 
     def sync_task(self, task_data: ThirdPartyTaskSyncReq) -> dict:
         """同步任务信息"""
         url = f"{self.base_url}/aflow/api/order/sync/task"
-        payload = task_data.model_dump(by_alias=True)
+        payload = self._model_to_dict(task_data, by_alias=True)
         return self._make_request(url, payload)
 
     def query_by_order_id(self, query_order_param: QueryOrderParam) -> dict:
         """同步任务信息"""
         url = f"{self.base_url}/aflow/api/order/open/query_by_order_id"
-        payload = self._normalize_get_payload(query_order_param.model_dump(by_alias=True, exclude_none=True))
+        payload = self._normalize_get_payload(self._model_to_dict(query_order_param, by_alias=True, exclude_none=True))
         return self._make_request(url, payload, "GET")
 
     def all_order_list(self, order_list_query: OrderListQueryParam) -> dict:
         """查询全量订单列表"""
-        url = f"{self.base_url}/aflow/order/query/allList"
-        payload = self._normalize_get_payload(order_list_query.model_dump(by_alias=True, exclude_none=True))
+        url = f"{self.base_url}/aflow/api/order/open/allList"
+        payload = self._normalize_get_payload(self._model_to_dict(order_list_query, by_alias=True, exclude_none=True))
         return self._make_request(url, payload, "GET")
 
     def query_user_by_user_code(self, query_user_param: QueryUserParam) -> dict:
         """根据用户编码查询用户详情"""
-        url = f"{self.base_url}/aflow/user/get"
-        payload = self._normalize_get_payload(query_user_param.model_dump(by_alias=True, exclude_none=True))
+        url = f"{self.base_url}/aflow/api/user/query_by_user_code"
+        payload = self._normalize_get_payload(self._model_to_dict(query_user_param, by_alias=True, exclude_none=True))
         return self._make_request(url, payload, "GET")
 
     def handle_flow(self, handle_flow_req: HandleFlowReq):
         url = f"{self.base_url}/aflow/api/order/open/handle_flow"
-        payload = handle_flow_req.model_dump(by_alias=True)
+        payload = self._model_to_dict(handle_flow_req, by_alias=True)
         return self._make_request(url, payload)
 
     def handle_flow_by_object(self, handle_flow_by_object_req: HandleFlowByObjectReq):
         url = f"{self.base_url}/aflow/api/order/open/handle_flow_by_object"
-        payload = handle_flow_by_object_req.model_dump(by_alias=True)
+        payload = self._model_to_dict(handle_flow_by_object_req, by_alias=True)
         return self._make_request(url, payload)
 
     def _normalize_get_payload(self, payload: dict) -> dict:
@@ -169,6 +169,13 @@ class AFlowClient:
             else:
                 normalized[key] = str(value)
         return normalized
+
+    def _model_to_dict(self, model, by_alias: bool = True, exclude_none: bool = False) -> dict:
+        if hasattr(model, "model_dump"):
+            return model.model_dump(by_alias=by_alias, exclude_none=exclude_none)
+        if hasattr(model, "dict"):
+            return model.dict(by_alias=by_alias, exclude_none=exclude_none)
+        raise TypeError(f"Unsupported model type: {type(model)}")
 
 
 if __name__ == '__main__':
