@@ -18,6 +18,7 @@ from aflow_client_python.models import (
     QueryOrderParam,
     OrderListQueryParam,
     QueryUserParam,
+    QueryUserByEmailParam,
     HandleFlowReq,
     AHandleParam,
     AValue,
@@ -185,6 +186,14 @@ def query_user_by_user_code():
     pprint.pp(ret)
 
 
+def query_user_by_email():
+    query_user_req = QueryUserByEmailParam(
+        email="zhangsan@a.com"
+    )
+    ret = aflow_client.query_user_by_email(query_user_req)
+    pprint.pp(ret)
+
+
 def handle_flow():
     """
     operateType可填类型：
@@ -282,6 +291,7 @@ if __name__ == '__main__':
     # sync_task()
     # query_by_order_id()
     # all_order_list()
-     query_user_by_user_code()
+    # query_user_by_user_code()
+    query_user_by_email()
     # handle_flow()
     # handle_flow_by_object()

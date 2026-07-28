@@ -4,7 +4,7 @@ from .user import UserSyncItem
 from .bind_user import BindUserReq
 from .query_order import QueryOrderParam
 from .query_order_list import OrderListQueryParam
-from .query_user import QueryUserParam
+from .query_user import QueryUserByEmailParam, QueryUserParam
 
 __all__ = [
     "DepartmentSyncItem",
@@ -14,5 +14,6 @@ __all__ = [
     "BindUserReq",
     "QueryOrderParam",
     "OrderListQueryParam",
-    "QueryUserParam"
+    "QueryUserParam",
+    "QueryUserByEmailParam"
 ]

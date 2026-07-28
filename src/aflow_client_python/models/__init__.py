@@ -7,6 +7,7 @@ from .sync import (
     BindUserReq,
     QueryOrderParam,
     OrderListQueryParam,
+    QueryUserByEmailParam,
     QueryUserParam,
 )
 
@@ -41,6 +42,7 @@ __all__ = [
     "BindUserReq",
     "OrderListQueryParam",
     "QueryUserParam",
+    "QueryUserByEmailParam",
     "ThirdPartyFlowBase",
     "ThirdPartyFlowUrl",
     "ThirdPartyFlowCreateReq",

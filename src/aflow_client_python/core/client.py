@@ -24,10 +24,10 @@ try:
         ThirdPartyTaskSyncReq,
         QueryOrderParam,
         QueryUserParam,
+        QueryUserByEmailParam,
         HandleFlowReq,
         HandleFlowByObjectReq
-
-)
+    )
     from ..utils import logger
     from ..utils.sign import ASignature
 except ImportError:
@@ -54,6 +54,7 @@ except ImportError:
         ThirdPartyTaskSyncReq,
         QueryOrderParam,
         QueryUserParam,
+        QueryUserByEmailParam,
         HandleFlowReq,
         HandleFlowByObjectReq
     )
@@ -144,6 +145,12 @@ class AFlowClient:
     def query_user_by_user_code(self, query_user_param: QueryUserParam) -> dict:
         """根据用户编码查询用户详情"""
         url = f"{self.base_url}/aflow/api/user/query_by_user_code"
+        payload = self._normalize_get_payload(self._model_to_dict(query_user_param, by_alias=True, exclude_none=True))
+        return self._make_request(url, payload, "GET")
+
+    def query_user_by_email(self, query_user_param: QueryUserByEmailParam) -> dict:
+        """根据邮箱查询用户详情"""
+        url = f"{self.base_url}/aflow/api/user/query_by_email"
         payload = self._normalize_get_payload(self._model_to_dict(query_user_param, by_alias=True, exclude_none=True))
         return self._make_request(url, payload, "GET")
 
